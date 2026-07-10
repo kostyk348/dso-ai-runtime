@@ -88,14 +88,17 @@ the v3 parser, `Q8_0`/`BF16`/`F16`/`F32` dequant, and lm_head dot products all r
 without crashes. Full generation for that model is pending the hybrid
 SSM+Attention (Qwen3.5) architecture port — see Architecture notes.
 
-## Benchmarks (Qwen2.5-0.5B-Instruct, this machine — 16-core x86, 14 GB RAM)
+## Benchmarks (Qwen2.5-0.5B-Instruct, this machine — 16-core x86, 16 GB RAM, 128 new tokens)
 
-| Mode | Threads | tok/s | CPU load |
-|------|---------|-------|----------|
-| BF16 (safetensors) | 16 | 4.7 | 100% |
-| INT8 (scalar GEMM) | 16 | 18.8 | 100% |
-| INT8 + AVX2 | 4 | 20.5 | ~25% |
-| INT8 + AVX2 | 16 | 24.6 | 100% |
+| Mode | Threads | tok/s |
+|------|---------|-------|
+| BF16 (safetensors) | 16 | 7.2 |
+| BF16 (safetensors) | 4 | 10.7 |
+| INT8 (.dso) | 16 | 52.5 |
+| INT8 (.dso) | 4 | 74.3 |
+
+Note: on this box **4 threads beat 16** (7.2→10.7 BF16, 52.5→74.3 INT8) — SMT/thermal
+contention at full core count. Cap `OMP_NUM_THREADS` for both speed *and* lower CPU load.
 
 ### GGUF load (Qwen3.5-4B-gabliterated.q8_0.gguf, 426 tensors)
 
