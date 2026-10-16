@@ -1,5 +1,9 @@
 # DSO-AI Runtime
 
+[![Release](https://img.shields.io/github/v/release/kostyk348/dso-ai-runtime?sort=semver&color=blue)](https://github.com/kostyk348/dso-ai-runtime/releases)
+[![License](https://img.shields.io/badge/license-Apache-2.0-green)](https://github.com/kostyk348/dso-ai-runtime/blob/master/LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/kostyk348/dso-ai-runtime?branch=master)](https://github.com/kostyk348/dso-ai-runtime/commits/master)
+
 High-performance, **zero-malloc-in-loop** C++ inference engine for transformer LLMs
 (Qwen2/Qwen2.5) and GGUF models (incl. hybrid SSM+Attention `qwen35`), with
 **layer-by-layer disk streaming**, a static memory **arena**, **INT8 weight-only PTQ**,
@@ -51,12 +55,15 @@ python3 quantize.py        # -> model/model.dso  (~2x smaller than safetensors)
 
 ```bash
 # INT8, cool (low CPU) — ~20 tok/s on a laptop
+
 OMP_NUM_THREADS=4 DSO_MODEL=model/model.dso python3 run.py "The capital of France is" 64
 
 # INT8, max speed
+
 OMP_NUM_THREADS=16 DSO_MODEL=model/model.dso python3 run.py "Hello" 64
 
 # BF16 reference (no .dso needed)
+
 OMP_NUM_THREADS=16 python3 run.py "Hello" 64
 ```
 
@@ -67,6 +74,7 @@ The engine reads prompt token ids (space-separated) from a file:
 ```bash
 DSO_MODEL=model/model.dso ./dso_runtime prompt.tok 64
 # set DSO_NOEOS=1 to disable early stop (benchmarking)
+
 ```
 
 ### GGUF models (g_mode=2)
@@ -77,9 +85,11 @@ tensor inventory (names, shapes, dtypes, byte offsets):
 
 ```bash
 # bare engine
+
 DSO_MODEL=/path/Qwen3.5-4B-gabliterated.q8_0.gguf ./dso_runtime prompt.tok 64
 
 # dump tensor inventory
+
 GGUF_DEBUG=1 DSO_MODEL=/path/Qwen3.5-4B-gabliterated.q8_0.gguf ./dso_runtime prompt.tok 1
 ```
 
